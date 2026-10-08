@@ -1,0 +1,228 @@
+{
+  "name": "gemcomplete",
+  "displayName": "GhostCode: AI Inline Code Completion (Gemini)",
+  "description": "High-performance, security-first AI inline code completion for all languages powered by Google Gemini API.",
+  "version": "0.1.1",
+  "publisher": "gemcomplete-publisher",
+  "icon": "media/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mayank2014l/GhostCode"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Machine Learning"
+  ],
+  "keywords": [
+    "gemini",
+    "ai",
+    "copilot",
+    "completion",
+    "inline-completion",
+    "autocomplete"
+  ],
+  "main": "./dist/extension.js",
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": true,
+      "description": "GemComplete supports inline code completions in all workspaces."
+    }
+  },
+  "activationEvents": [
+    "*"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "gemcomplete.showUsage",
+        "title": "GemComplete: View Usage Quota & Settings",
+        "category": "GemComplete"
+      },
+      {
+        "command": "gemcomplete.openDashboard",
+        "title": "GemComplete: Open Visual Usage Dashboard",
+        "category": "GemComplete"
+      },
+      {
+        "command": "gemcomplete.toggle",
+        "title": "GemComplete: Toggle On/Off",
+        "category": "GemComplete"
+      },
+      {
+        "command": "gemcomplete.togglePrivateMode",
+        "title": "GemComplete: Toggle Private Mode",
+        "category": "GemComplete"
+      },
+      {
+        "command": "gemcomplete.setApiKey",
+        "title": "GemComplete: Set API Key",
+        "category": "GemComplete"
+      },
+      {
+        "command": "gemcomplete.clearApiKey",
+        "title": "GemComplete: Clear API Key",
+        "category": "GemComplete"
+      },
+      {
+        "command": "gemcomplete.clearCache",
+        "title": "GemComplete: Clear Cache",
+        "category": "GemComplete"
+      },
+      {
+        "command": "gemcomplete.showOutputLog",
+        "title": "GemComplete: Show Output Log",
+        "category": "GemComplete"
+      },
+      {
+        "command": "gemcomplete.trigger",
+        "title": "GemComplete: Trigger Completion",
+        "category": "GemComplete"
+      }
+    ],
+    "configuration": {
+      "title": "GemComplete",
+      "properties": {
+        "gemcomplete.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable GemComplete inline completions."
+        },
+        "gemcomplete.model": {
+          "type": "string",
+          "default": "gemini-3.1-flash-lite",
+          "description": "The primary Gemini model to use for code completions."
+        },
+        "gemcomplete.fallbackModels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "gemini-flash-latest",
+            "gemini-3.8-flash",
+            "gemini-3.5-flash"
+          ],
+          "description": "Fallback Gemini models to try in order if the primary model returns a rate limit (HTTP 429) or transient error."
+        },
+        "gemcomplete.debounceMs": {
+          "type": "integer",
+          "default": 150,
+          "minimum": 100,
+          "maximum": 5000,
+          "description": "Debounce delay in milliseconds to wait after typing stops before querying the Gemini API."
+        },
+        "gemcomplete.maxPrefixChars": {
+          "type": "integer",
+          "default": 3000,
+          "minimum": 500,
+          "maximum": 20000,
+          "description": "Maximum number of characters of code before the cursor to send as context."
+        },
+        "gemcomplete.maxSuffixChars": {
+          "type": "integer",
+          "default": 1000,
+          "minimum": 100,
+          "maximum": 10000,
+          "description": "Maximum number of characters of code after the cursor to send as context."
+        },
+        "gemcomplete.maxOutputTokens": {
+          "type": "integer",
+          "default": 128,
+          "minimum": 16,
+          "maximum": 1024,
+          "description": "Maximum number of tokens to generate in a completion suggestion."
+        },
+        "gemcomplete.temperature": {
+          "type": "number",
+          "default": 0.2,
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Sampling temperature for generation. Lower values provide more deterministic code completions."
+        },
+        "gemcomplete.disabledLanguages": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "plaintext",
+            "markdown",
+            "scminput"
+          ],
+          "description": "List of language IDs where inline completions should not be offered."
+        },
+        "gemcomplete.excludeGlobs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "**/.env*",
+            "**/*.pem",
+            "**/*.key",
+            "**/id_rsa*",
+            "**/*.p12",
+            "**/secrets.*",
+            "**/credentials.*",
+            "**/.npmrc",
+            "**/.git/config"
+          ],
+          "description": "Glob patterns for sensitive files that will NEVER have context sent to the API."
+        },
+        "gemcomplete.customRedactionPatterns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "User-defined regular expressions whose matches are redacted to [REDACTED] prior to sending to the API."
+        },
+        "gemcomplete.privateMode": {
+          "type": "boolean",
+          "default": false,
+          "description": "When enabled, GemComplete operates in strict private mode: absolutely no network requests are sent."
+        },
+        "gemcomplete.includeOtherOpenTabs": {
+          "type": "boolean",
+          "default": false,
+          "description": "Optionally include short redacted snippets from other open editor tabs as contextual assistance."
+        },
+        "gemcomplete.maxFileSizeKB": {
+          "type": "integer",
+          "default": 1000,
+          "minimum": 50,
+          "description": "Maximum file size in kilobytes eligible for inline completions."
+        },
+        "gemcomplete.apiEndpoint": {
+          "type": "string",
+          "default": "https://generativelanguage.googleapis.com",
+          "description": "Gemini API endpoint base URL. Must start with https:// and match generativelanguage.googleapis.com unless explicitly overridden."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run build",
+    "compile": "tsc -p ./",
+    "watch": "node esbuild.js --watch",
+    "build": "node esbuild.js --production",
+    "test": "npm run compile && mocha -r ./tests/mockVscode.js --ui tdd --timeout 10000 out/tests/**/*.test.js",
+    "lint": "eslint src tests",
+    "package": "npm run build && vsce package"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^20.17.24",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^8.26.0",
+    "@typescript-eslint/parser": "^8.26.0",
+    "@vscode/vsce": "^3.2.1",
+    "esbuild": "^0.25.0",
+    "eslint": "^9.21.0",
+    "mocha": "^11.1.0",
+    "typescript": "^5.7.3"
+  }
+}

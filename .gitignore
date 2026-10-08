@@ -1,0 +1,10 @@
+node_modules/
+dist/
+out/
+*.vsix
+!gemcomplete-0.1.1.vsix
+.vscode-test/
+.DS_Store
+*.log
+.env*
+scratch/
